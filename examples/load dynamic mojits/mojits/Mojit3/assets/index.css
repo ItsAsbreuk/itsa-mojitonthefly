@@ -1,0 +1,11 @@
+.mojit3 {
+    background-color: #d4d8eb;
+    padding: 40px;
+    text-align: center;
+    height: 230px;
+}
+
+.childmojit {
+    width: 230px;
+    border: solid 1px #000;
+}

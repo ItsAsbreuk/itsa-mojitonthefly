@@ -1,0 +1,10 @@
+.page2mojit {
+    background-color: #d4d8eb;
+    padding: 40px;
+    text-align: center;
+}
+
+.childmojit {
+    width: 230px;
+    border: solid 1px #000;
+}

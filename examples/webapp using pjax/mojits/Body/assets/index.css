@@ -1,0 +1,10 @@
+body {
+    padding: 30px;
+}
+
+.container {
+    margin-top: 20px;
+    display: block;
+    width: 100%;
+    border: solid 1px #999;
+}

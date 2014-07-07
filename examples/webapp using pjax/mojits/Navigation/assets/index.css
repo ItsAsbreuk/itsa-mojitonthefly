@@ -1,0 +1,35 @@
+button.pure-button {
+    display: block;
+    margin-bottom: 10px;
+    width: 10em;
+}
+
+button.pure-button.pure-button-active {
+    background-color: #0078e7;
+    color: #FFF;
+}
+
+.inline-div.description,
+.inline-div {
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+    vertical-align: top;
+    padding-right: 30px;
+}
+
+.inline-div.description {
+    margin-top: 0;
+}
+
+.controll {
+    border-bottom: solid 5px #999;
+    padding-bottom: 20px;
+}
+
+.description {
+    display: block;
+    font-style: italic;
+    font-size: 0.8em;
+    margin: 40px 0;
+}

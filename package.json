@@ -1,0 +1,40 @@
+{
+  "name": "itsa-mojitonthefly",
+  "description": "Utility mojit for mojito providing Y.Node.loadMojit and Pjax functionality by executing mojit instances inside containernodes 'on the fly', without a predefinition in application.json.",
+  "version": "0.1",
+  "author": {
+    "name": "Marco Asbreuk",
+    "email": "marco@itsasbreuk.nl"
+  },
+  "main": "assets/itsa-mojitonthefly.server.js",
+  "engines": {
+    "node": "> 0.8",
+    "npm": "> 1.0"
+  },
+  "peerDependencies": {
+    "mojito": ">=0.9.5"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified just yet\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/itsasbreuk/mojito-onthefly-mojit.git"
+  },
+  "keywords": [
+    "mojito",
+    "mojit",
+    "onthefly",
+    "node",
+    "loadmojit",
+    "load",
+    "pjax",
+    "itsa",
+    "itsasbreuk"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/itsasbreuk/mojito-onthefly-mojit/issues"
+  },
+  "readmeFilename": "README.md"
+}

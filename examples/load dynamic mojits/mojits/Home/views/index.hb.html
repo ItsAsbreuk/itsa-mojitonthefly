@@ -1,0 +1,45 @@
+<div id="{{mojit_view_id}}">
+
+    <div class="pure-g controll">
+        <div class="pure-u-1-4 mojitselection">
+            <button class="pure-button pure-button-active" data-loadmojit="Mojit1">Mojit 1</button>
+            <button class="pure-button" data-loadmojit="Mojit2">Mojit 2</button>
+            <button class="pure-button" data-loadmojit="Mojit3">Mojit 3</button>
+            <button class="pure-button" data-loadmojit="Mojit4">Mojit 4</button>
+            <div class="description">Mojit 4 is responsed with a 4 sec. delay</div>
+        </div>
+        <div class="pure-u-1-4 containerselection">
+            <button class="pure-button pure-button-active" data-loadcontainer="#container1">Container 1</button>
+            <button class="pure-button" data-loadcontainer="#container2">Container 2</button>
+            <button class="pure-button" data-loadcontainer="#container3">Container 3</button>
+            <button class="pure-button" data-loadcontainer="#container4">Container 4</button>
+        </div>
+        <div class="pure-u-1-2">
+            <div class="codedescription"></div>
+            <button class="pure-button execute">Execute</button>
+        </div>
+    </div>
+
+    <div class="pure-g">
+        <div class="pure-u-1-2 container-parent">
+            <div class="container-description">Container 1</div>
+            <div id="container1" class="container-child"></div>
+        </div>
+        <div class="pure-u-1-2 container-parent">
+            <div class="container-description">Container 2</div>
+            <div id="container2" class="container-child"></div>
+        </div>
+    </div>
+
+    <div class="pure-g">
+        <div class="pure-u-1-2 container-parent">
+            <div class="container-description">Container 3</div>
+            <div id="container3" class="container-child"></div>
+        </div>
+        <div class="pure-u-1-2 container-parent">
+            <div class="container-description">Container 4</div>
+            <div id="container4" class="container-child"></div>
+        </div>
+    </div>
+
+</div>

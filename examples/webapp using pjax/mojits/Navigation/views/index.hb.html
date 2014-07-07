@@ -1,0 +1,30 @@
+<div id="{{mojit_view_id}}">
+
+    <div class="controll">
+        <div class="pjaxselection inline-div">
+            <button class="pure-button pure-button-active" data-pjaxtype="0">no pjax</button>
+            <button class="pure-button" data-pjaxtype="1">pjax non-cached</button>
+            <button class="pure-button" data-pjaxtype="2">pjax cached</button>
+        </div>
+        <div class="inline-div"><b>menu:</b></div>
+        <div class="inline-div description codedescription"></div>
+        <div class="description">Choosing a pjax-method above will set attributes on the menu's anchor-elements. After the configuration is set, you can navigate with the menu below.<br>Page 3 is responsed with a 4 sec. delay.</div>
+        <div class="pure-menu pure-menu-open pure-menu-horizontal">
+            <ul>
+                <li{{#if Home}} class="pure-menu-selected"{{/if}}>
+                    <a href="/" data-pjax-mojit="Home" data-pjax-action="index"{{#if Home}} data-pjax-initialstate="true"{{/if}}>Home</a>
+                </li>
+                <li{{#if Page1}} class="pure-menu-selected"{{/if}}>
+                    <a href="/page1.html" data-pjax-mojit="Page1" data-pjax-action="index"{{#if Page1}} data-pjax-initialstate="true"{{/if}}>Page 1</a>
+                </li>
+                <li{{#if Page2}} class="pure-menu-selected"{{/if}}>
+                    <a href="/page2.html" data-pjax-mojit="Page2" data-pjax-action="index"{{#if Page2}} data-pjax-initialstate="true"{{/if}}>Page 2</a>
+                </li>
+                <li{{#if Page3}} class="pure-menu-selected"{{/if}}>
+                    <a href="/page3.html" data-pjax-mojit="Page3" data-pjax-action="index"{{#if Page3}} data-pjax-initialstate="true"{{/if}}>Page 3</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</div>

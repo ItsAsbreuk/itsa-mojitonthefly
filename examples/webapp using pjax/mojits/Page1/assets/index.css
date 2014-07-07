@@ -1,0 +1,26 @@
+.yui3-scrollview-loading {
+    visibility: hidden;
+}
+
+.page1mojit {
+    background-color: #edf5ff;
+    padding: 40px;
+    text-align: center;
+}
+
+.page1mojit .yui3-scrollview {
+    width: 230px;
+    background-color: #FFF;
+    border: solid 2px #333;
+}
+
+.scrolllist ul {
+    list-style: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.scrolllist li {
+    font-size: 1.4em;
+    padding: 0.3em 0;
+}

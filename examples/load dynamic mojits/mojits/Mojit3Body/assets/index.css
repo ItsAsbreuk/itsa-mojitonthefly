@@ -1,0 +1,27 @@
+.bodymojit3 {
+    background-color: #EEE;
+    padding: 40px 40px 6px;
+    text-align: center;
+}
+
+.bodymojit3 .yui3-scrollview-loading {
+    visibility: hidden;
+}
+
+.bodymojit3 .yui3-scrollview {
+    width: 150px;
+    background-color: #FFF;
+    border: solid 2px #333;
+    margin-top: 5px;
+}
+
+.scrollist-mojit3 ul {
+    list-style: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.scrollist-mojit3 li {
+    font-size: 1.2em;
+    padding: 0.3em 0;
+}

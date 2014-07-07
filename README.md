@@ -186,6 +186,7 @@ The next utilitymethods are available:
 
 _Events:_
 Pjax will file the `pjax-event` on the Y-instance. The eventobject has the properties:
+
     * uri (anchornode's href)
     * targetnode (anchornode)
     * fromhistory (whether the pjac is initiated by history's back/foreward button)
@@ -200,7 +201,7 @@ that can be defined inside the binder. This destructor
 should also be called from within `onRefreshView()`.
 
 The `destructor`-method is not officially part of Mojito, but
-Y.Node.loadMojit() and Y.mojito.pjax will call it before removing
+_Y.Node.loadMojit()_ and _Y.mojito.pjax_ will call it before removing
 (should the destructor is defined).
 
 The destructor should be defined within the Mojits who are to be executed, not

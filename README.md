@@ -1,8 +1,8 @@
 Mojit On The Fly
 ==================
 
-This is a utility mojit for mojito providing clientside
-Y.Node.loadMojit() and Pjax-functionality. Using these methods,
+This is a utility mojit for [Mojito](https://developer.yahoo.com/cocktails/mojito/) providing clientside
+`Y.Node.loadMojit()` and `Pjax`-functionality. Using these methods,
 Mojito will return a json-object that is handled by these
 methods and inserted into the specified containernodes.
 
@@ -28,8 +28,9 @@ Usage step 1:
 -------------
 
 Once `itsa-mojitonthefly` is installed in your application, you
-must add its functionality inside app.js, by defining the statement:
-"mojitOnthefly.extend(app, libmojito)". See next example:
+must add its functionality inside `app.js`, by defining the statement:
+_mojitOnthefly.extend(app, libmojito)_.
+`example app.js:`
 
 ```js
 var express = require('express'),
@@ -58,16 +59,16 @@ app.listen(app.get('port'), function () {
 ```
 
 This will add extra middleware that interrupts when the headers
-'M-PJAX' or 'M-FLY-MOJIT' are found. These headers are generated
-on the client by Y.Node.loadMojit() and Y.mojito.pjax (see below)
+`M-PJAX` or `M-FLY-MOJIT` are found. These headers are generated
+on the client by _Y.Node.loadMojit()_ and _Y.mojito.pjax_ (see below).
 
 Usage step 2:
 -------------
 
-Concerning the Mojit you want to provide Y.Node.loadMojit() and Pjax-functionality:
-Inside controller.server.js --> include the dependency 'itsa-mojitonthefly-addon'
+With the Mojit you want to use _Y.Node.loadMojit()_ or _Pjax-functionality_:
+Inside `controller.server.js` --> include the dependency `itsa-mojitonthefly-addon`.
 
-example controller.server.js:
+`example controller.server.js:`
 ```js
 YUI.add('navigation', function(Y, NAME) {
 
@@ -84,14 +85,14 @@ This ensures the modulecode will be send to the client.
 Usage step 3a Y.Node.loadMojit():
 ---------------------------------
 
-You can call Y.Node.loadMojit(mojitname, action); to make the mojit
-execute and loaded inside the node specified.
+You can call `Y.Node.loadMojit(mojitname, action)` to make the mojit
+execute and loaded inside the parentnode specified.
 
 On the clientside code (inside the binder) make sure to include the
-dependency 'itsa-mojitonthefly', otherwise the code might not be ready yet. 
-"Step 2" makes sure the modulecode is available on the client.
+dependency `itsa-mojitonthefly`, otherwise the code might not be ready yet. 
+_Step 2_ makes sure the modulecode is available on the client.
 
-example binder:
+`example binder:`
 ```js
 YUI.add('home-binder-index', function(Y, NAME) {
 
@@ -117,28 +118,28 @@ YUI.add('home-binder-index', function(Y, NAME) {
 Usage step 3b Pjax:
 -------------------
 
-Assuming "Step 2" is set, you can use Pjax roght out of the box by just defining
+Assuming _Step 2_ is set, you can use Pjax roght out of the box by just defining
 the right attributes to the HTML:
 ```html
-    <div class="pure-menu pure-menu-open pure-menu-horizontal">
-        <ul>
-            <li class="pure-menu-selected">
-                <a href="/" data-pjax-mojit="Home" data-pjax-container="#cont" data-pjax-initialstate="true">Home</a>
-            </li>
-            <li>
-                <a href="/page1.html" data-pjax-mojit="Page1" data-pjax-container="#cont">Page 1</a>
-            </li>
-            <li>
-                <a href="/page2.html" data-pjax-mojit="Page2" data-pjax-container="#cont">Page 2</a>
-            </li>
-            <li>
-                <a href="/page3.html" data-pjax-mojit="Page3" data-pjax-container="#cont">Page 3</a>
-            </li>
-        </ul>
-    </div>
+<div class="pure-menu pure-menu-open pure-menu-horizontal">
+    <ul>
+        <li class="pure-menu-selected">
+            <a href="/" data-pjax-mojit="Home" data-pjax-container="#cont" data-pjax-initialstate="true">Home</a>
+        </li>
+        <li>
+            <a href="/page1.html" data-pjax-mojit="Page1" data-pjax-container="#cont">Page 1</a>
+        </li>
+        <li>
+            <a href="/page2.html" data-pjax-mojit="Page2" data-pjax-container="#cont">Page 2</a>
+        </li>
+        <li>
+            <a href="/page3.html" data-pjax-mojit="Page3" data-pjax-container="#cont">Page 3</a>
+        </li>
+    </ul>
+</div>
 ```
-The Pjax-utility will automaticly adjust the class "pure-menu-selected" whenever an anchorlink is clicked.
-So, if you are using Purecss, everyting works right out of the box.
+The Pjax-utility will automaticly adjust the class `pure-menu-selected` whenever an anchorlink is clicked.
+So, if you are using [Purecss](http://purecss.io), everyting works right out of the box.
 
 You can make use of the following attributes:
 
@@ -149,15 +150,15 @@ You can make use of the following attributes:
     * data-pjax-preload="true|number" --> optional: when set, these Mojits are loaded behind the scenes so they appear quick when asked for. the attributes value specifies its cachetime. when set, cachingtime is automaticly: there is no need to define data-pjax-cache as well
     * data-pjax-container="nodeselector" --> optional: the parenNode of the view, the view will be inserted as innerHTML --> when not specified, you should use Y.mojito.pjax.setContainer(containernode);
 
-Optionally, you can make use of Y.mojito.pjax, which has several sugar methods.
-For instance: data-pjax-container is most likely to be the same node for all anchorlinks.
+Optionally, you can make use of `Y.mojito.pjax`, which has several sugar methods.
+For instance: _data-pjax-container_ is most likely to be the same node for all anchorlinks.
 You can use the API to set the default containernode.
 
-If you choose to use Y.mojito.pjax on the clientside code (inside the binder),
-make sure to include the dependency 'itsa-mojitonthefly', otherwise the code 
-might not be ready yet. "Step 2" makes sure the modulecode is available on the client.
+If you choose to use `Y.mojito.pjax` on the clientside code (inside the binder),
+make sure to include the dependency `itsa-mojitonthefly`, otherwise the code 
+might not be ready yet. _Step 2_ makes sure the modulecode is available on the client.
 
-example binder:
+`example binder:`
 ```js
 YUI.add('navigation-binder-index', function(Y, NAME) {
 
@@ -177,35 +178,35 @@ YUI.add('navigation-binder-index', function(Y, NAME) {
 ```
 The next utilitymethods are available:
 
-* Y.mojito.pjax.setContainer(container); // set default container (parentNode)
-* Y.mojito.pjax.setCacheTime(sec); // set default cachetime
-* Y.mojito.pjax.emptyCache(); // empty cache, forcing to reload the mojit from the server
-* Y.mojito.pjax.pjaxAvailable(); // boolean: if pjax can be used (only if HTML5-history is available)
-* Y.mojito.pjax.simulateAnchorClick(anchornode); // simulate an anchorclick through Pjax, is a better simulation than a nodeclick, for the classnames and history-state are updated
+    * Y.mojito.pjax.setContainer(container); // set default container (parentNode)
+    * Y.mojito.pjax.setCacheTime(sec); // set default cachetime
+    * Y.mojito.pjax.emptyCache(); // empty cache, forcing to reload the mojit from the server
+    * Y.mojito.pjax.pjaxAvailable(); // boolean: if pjax can be used (only if HTML5-history is available)
+    * Y.mojito.pjax.simulateAnchorClick(anchornode); // simulate an anchorclick through Pjax, is a better simulation than a nodeclick, for the classnames and history-state are updated
 
-Events:
-Pjax will file the event 'pjax' on the Y-instance. The eventobject has the properties:
-* uri (anchornode's href)
-* targetnode (anchornode)
-* fromhistory (whether the pjac is initiated by history's back/foreward button)
+_Events:_
+Pjax will file the `pjax-event` on the Y-instance. The eventobject has the properties:
+    * uri (anchornode's href)
+    * targetnode (anchornode)
+    * fromhistory (whether the pjac is initiated by history's back/foreward button)
 
 Usage step 4:
 -------------
 
 Because Mojits are defined dynamicly, the also are removed dynamicly.
 You MUST make sure to handle Mojit-destruction well!
-This addon makes advantage of a "destructor"-method, 
+This addon makes advantage of a `destructor()`-method, 
 that can be defined inside the binder. This destructor
-should also be called from within onRefreshView().
+should also be called from within `onRefreshView()`.
 
-The destructor-method is not officially part of Mojito, but
+The `destructor`-method is not officially part of Mojito, but
 Y.Node.loadMojit() and Y.mojito.pjax will call it before removing
-(if present).
+(should the destructor is defined).
 
 The destructor should be defined within the Mojits who are to be executed, not
-the masterone who controls the logic (as specified in step 3).
+the masterMojit who controls the logic (as specified in _Step 3_).
 
-example:
+`example:`
 ```js
 YUI.add('scrollview-binder-index', function(Y, NAME) {
 
@@ -245,7 +246,7 @@ Examples
 --------
 
 See the examplefolder for 2 working examples.
-They show the powerful usage of itsa-mojitonthefly.
+They show the powerful usage of `itsa-mojitonthefly-addon`.
 
 License
 -------

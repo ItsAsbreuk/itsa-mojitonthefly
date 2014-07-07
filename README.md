@@ -21,7 +21,7 @@ $ npm install itsa-mojitonthefly --save
 ```
 
 _note: the `--save` flag indicates that the `package.json` for
-the application should also register the `itsa-mojitonthefly` as
+the application should also register the `itsa-mojitonthefly-addon` as
 a dependency._
 
 Usage step 1:

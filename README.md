@@ -1,7 +1,7 @@
 Mojit On The Fly
 ==================
 
-This is a utility mojit for [Mojito](https://developer.yahoo.com/cocktails/mojito/) providing clientside
+This is a utility for [Mojito](https://developer.yahoo.com/cocktails/mojito/) providing clientside
 `Y.Node.loadMojit()` and `Pjax`-functionality. Using these methods,
 Mojito will return a json-object that is handled by these
 methods and inserted into the specified containernodes.
@@ -17,7 +17,7 @@ Install the `npm` package in your application folder:
 
 ```shell
 $ cd path/to/app
-$ npm install itsa-mojitonthefly --save
+$ npm install itsa-mojitonthefly-addon --save
 ```
 
 _note: the `--save` flag indicates that the `package.json` for
@@ -27,7 +27,7 @@ a dependency._
 Usage step 1:
 -------------
 
-Once `itsa-mojitonthefly` is installed in your application, you
+Once `itsa-mojitonthefly-addon` is installed in your application, you
 must add its functionality inside `app.js`, by defining the statement:
 _mojitOnthefly.extend(app, libmojito)_.
 `example app.js:`

@@ -48,6 +48,7 @@ module.exports = {
 
 
         libdispatcher.handleRequest = function(req, res, next) {
+            var i, par;
             if (!req.header('M-PJAX') || (req.params && req.params.pjax)) {
                 // we ALSO looked at req.params.pjax to prevent looping!
                 // in case req.params.pjax===true, the mojit already is replaced
@@ -55,7 +56,11 @@ module.exports = {
             }
             // first set param that determines to return a full response, or just a view
             req.params || (req.params={});
-            // libmojito.deispatch should know we come from pjax:
+            i = 0;
+            while (par=req.header('M-PJAX-PAR'+(++i))) {
+                req.params[i-1] = par;
+            }
+            // libmojito.dispatch should know we come from pjax:
             req.params.pjax = true;
             // now add additional parameters to be handled by @Dynamic.index
             req.params.flyfull = req.header('M-PJAX-FULL');

@@ -755,11 +755,17 @@ YUI.add('itsa-mojitonthefly', function(Y) {
         doPjax = function(targetnode, uri, cachabletime, renderedbefore, preload, nosavehistory, ispreloaded) {
             var pjaxcontainer = targetnode.getAttribute('data-pjax-container'),
                 container = (pjaxcontainer && Y.one(pjaxcontainer)) || defaultContainer || body,
-                loadmojit, loadaction, headers, jsonPromise;
+                i = 0,
+                loadmojit, loadaction, headers, jsonPromise, parheader;
 
             loadmojit = targetnode.getAttribute('data-pjax-mojit');
             loadaction = targetnode.getAttribute('data-pjax-action');
             headers = {'M-PJAX': true};
+/*jshint boss:true */
+            while (parheader=targetnode.getAttribute('data-pjax-par'+(++i))) {
+                headers['M-PJAX-PAR'+i] = parheader;
+            }
+/*jshint boss:false */
 /*jshint expr:true */
             loadmojit && (headers['M-PJAX-MOJIT']=loadmojit);
             loadaction && (headers['M-PJAX-ACTION']=loadaction);

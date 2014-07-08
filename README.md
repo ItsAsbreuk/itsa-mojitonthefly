@@ -89,7 +89,7 @@ You can call `Y.Node.loadMojit(mojitname, action)` to make the mojit
 execute and loaded inside the parentnode specified.
 
 On the clientside code (inside the binder) make sure to include the
-dependency `itsa-mojitonthefly`, otherwise the code might not be ready yet. 
+dependency `itsa-mojitonthefly`, otherwise the code might not be ready yet.
 _Step 2_ makes sure the modulecode is available on the client.
 
 `example binder:`
@@ -143,19 +143,20 @@ So, if you are using [Purecss](http://purecss.io), everyting works right out of 
 
 You can make use of the following attributes:
 
-    * data-pjax-mojit="Mojit"
-    * data-pjax-action="action" --> optional: defaults to "index" when not specified
-    * data-pjax-initialstate="true" --> optional: define this if the container is initially filled with the Mojit specified, this prevents reloading its assets
-    * data-pjax-cache="true|number" --> optional: time in seconds to cache the view, leading to quick reload of the mojit. true equals 3600 seconds (1 hour)
-    * data-pjax-preload="true|number" --> optional: when set, these Mojits are loaded behind the scenes so they appear quick when asked for. the attributes value specifies its cachetime. when set, cachingtime is automaticly: there is no need to define data-pjax-cache as well
-    * data-pjax-container="nodeselector" --> optional: the parenNode of the view, the view will be inserted as innerHTML --> when not specified, you should use Y.mojito.pjax.setContainer(containernode);
+    * `data-pjax-mojit="Mojit"`
+    * `data-pjax-action="action"` --> optional: defaults to "index" when not specified
+    * `data-pjax-initialstate="true"` --> optional: define this if the container is initially filled with the Mojit specified, this prevents reloading its assets
+    * `data-pjax-cache="true|number"` --> optional: time in seconds to cache the view, leading to quick reload of the mojit. true equals 3600 seconds (1 hour)
+    * `data-pjax-preload="true|number"` --> optional: when set, these Mojits are loaded behind the scenes so they appear quick when asked for. the attributes value specifies its cachetime. when set, cachingtime is automaticly: there is no need to define data-pjax-cache as well
+    * `data-pjax-container="nodeselector"` --> optional: the parenNode of the view, the view will be inserted as innerHTML --> when not specified, you should use Y.mojito.pjax.setContainer(containernode);
+    * `data-pjax-par_n_="somepar"` --> _(n>0)_ optional: adding extra parameters `data-pjax-par1="index.html" the same as when using regexp with app.get();
 
 Optionally, you can make use of `Y.mojito.pjax`, which has several sugar methods.
 For instance: _data-pjax-container_ is most likely to be the same node for all anchorlinks.
 You can use the API to set the default containernode.
 
 If you choose to use `Y.mojito.pjax` on the clientside code (inside the binder),
-make sure to include the dependency `itsa-mojitonthefly`, otherwise the code 
+make sure to include the dependency `itsa-mojitonthefly`, otherwise the code
 might not be ready yet. _Step 2_ makes sure the modulecode is available on the client.
 
 `example binder:`
@@ -196,7 +197,7 @@ Usage step 4:
 
 Because Mojits are defined dynamicly, the also are removed dynamicly.
 You MUST make sure to handle Mojit-destruction well!
-This addon makes advantage of a `destructor()`-method, 
+This addon makes advantage of a `destructor()`-method,
 that can be defined inside the binder. This destructor
 should also be called from within `onRefreshView()`.
 

@@ -13,7 +13,7 @@ YUI.add('itsa-mojitonthefly', function(Y, NAME) {
  * @module itsa-mojitonthefly
  */
     var ERROR_NO_MOJIT = '<b>ERROR: You need to specify a <u>child-Mojit</u> by settting the attribute <i>data-pjax-mojit="Somemojit"</i> on the anchor-element.</b>',
-        ERROR_INVALID_MOJIT = '<b>ERROR: Mojit <i>@{mojit}</i> does not exist.</b>';
+        ERROR_INVALID_MOJIT = '<b>ERROR: Mojit <i>@{mojit}.{action}</i> does not exist.</b>';
     /**
      * Constructor for the Controller class.
      *
@@ -58,7 +58,7 @@ YUI.add('itsa-mojitonthefly', function(Y, NAME) {
             ac.composite.execute(cfg, function(data, fragments) {
                 var view = data.original;
                 if (view==='') {
-                    view = Y.Lang.sub(ERROR_INVALID_MOJIT, {mojit: flymojit});
+                    view = Y.Lang.sub(ERROR_INVALID_MOJIT, {mojit: flymojit, action: flyaction});
                 }
                 if (!flyfull) {
                     ac.done({view: view, binders: fragments.binders}, 'json');

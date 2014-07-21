@@ -479,7 +479,7 @@ YUI.add('itsa-mojitonthefly', function(Y) {
 
     Y.namespace('mojito').pjax = (function() {
         var loadedpages = {},
-            history, initialize, bind, defaultContainer, defaultCacheTime, saveHistory,
+            history, initialize, bind, defaultContainer, defaultCacheTime, saveHistory, initializeHistory,
             setSelectedMenu, doPjax, preload, getCachabletime, defFnLoadPage, extractedURI, pjaxnotifier;
 
         /**
@@ -492,11 +492,13 @@ YUI.add('itsa-mojitonthefly', function(Y) {
          *
         **/
         initialize = function() {
-            var initialuri, initialstateNode;
+            var initialuri;
             if (SUPPORTS_HISTORY_HTML5) {
                 extractedURI = win.location.href.match(REGEXP_FIND_URI);
-                initialuri = extractedURI[3]; // third item is the path
-                initialstateNode = Y.one('a[data-pjax-initialstate="true"]');
+                initialuri = extractedURI[3] || ''; // third item is the path
+/*jshint expr:true */
+                (initialuri[0]==='/') || (initialuri='/'+initialuri);
+/*jshint expr:false */
                 Y.publish(
                     EVT_PJAX,
                     {
@@ -504,12 +506,7 @@ YUI.add('itsa-mojitonthefly', function(Y) {
                         emitFacade: true
                     }
                 );
-
-                history = new Y.HistoryHTML5();
-                // save current uri
-/*jshint expr:true */
-                initialstateNode && saveHistory(initialuri, doc.title, initialstateNode, true);
-/*jshint expr:false */
+                initializeHistory(initialuri);
                 // to be able to cancel transactions in case of anothr pjax-call during previous transaction, we include
                 // Y.Promise.EventNotifier --> https://github.com/smugmug/yui-gallery/tree/master/src/sm-promise-events
                 pjaxnotifier = new Y.Promise.EventNotifier();
@@ -520,6 +517,36 @@ YUI.add('itsa-mojitonthefly', function(Y) {
                 // we delay because we want other processes to be prefered. After all, preload is meant to be a cache for future requests
                 Y.later(60, null, preload, initialuri);
             }
+        };
+
+        initializeHistory = function(initialuri) {
+            var attributes = {},
+                initialstateNode, i, parheader, targetid, config;
+            initialstateNode = Y.one('a[data-pjax-initialstate="true"]');
+            if (initialstateNode) {
+                targetid = initialstateNode.get('id');
+                attributes = {
+                    'data-pjax-mojit': initialstateNode.getAttribute('data-pjax-mojit'),
+                    'data-pjax-action': initialstateNode.getAttribute('data-pjax-action'),
+                    'data-pjax-container': initialstateNode.getAttribute('data-pjax-container'),
+                    'data-pjax-preload': initialstateNode.getAttribute('data-pjax-preload')
+                };
+                i = 0;
+    /*jshint boss:true */
+                while (parheader=initialstateNode.getAttribute('data-pjax-par'+(++i))) {
+                    attributes['data-pjax-par'+i] = parheader;
+                }
+    /*jshint boss:false */
+                config = {
+                    uri: initialuri,
+                    targetid: targetid,
+                    attributes: attributes
+                };
+            }
+            history = new Y.HistoryHTML5();
+/*jshint expr:true */
+            initialstateNode && saveHistory(initialuri, Y.config.doc.title, targetid, attributes, true);
+/*jshint expr:false */
         };
 
         /**
@@ -548,16 +575,16 @@ YUI.add('itsa-mojitonthefly', function(Y) {
          * @protected
          *
         **/
-        saveHistory = function(uri, title, targetnode, replace) {
+        saveHistory = function(uri, title, targetid, attributes, replace) {
 /*jshint expr:true */
-            targetnode.get('id') || targetnode.set('id', Y.guid());
             if (replace) {
-                history.replace({uri: uri, targetid: targetnode.get('id')}, {url: uri, title: title});
+                history.replace({uri: uri, targetid: targetid, attributes: attributes}, {url: uri, title: title});
             }
             else {
                 (history.get('uri')===uri) || history.add({
                     uri: uri,
-                    targetid: targetnode.get('id'),
+                    targetid: targetid,
+                    attributes: attributes,
                     xpos: win.pageXOffset || doc.documentElement.scrollLeft,
                     ypos: win.pageYOffset || doc.documentElement.scrollTop
                 },
@@ -580,8 +607,21 @@ YUI.add('itsa-mojitonthefly', function(Y) {
         preload = function(initialuri) {
             body.all('a[data-pjax-preload], a[data-pjax-initialstate="true"]').each(
                 function(anchornode) {
-                    var uri = anchornode.getAttribute('href');
-                    doPjax(anchornode, uri, getCachabletime(anchornode, true), uri===initialuri, true, true, false);
+                    var uri = anchornode.getAttribute('href'),
+                        i, attributes, parheader;
+                    attributes = {
+                        'data-pjax-mojit': anchornode.getAttribute('data-pjax-mojit'),
+                        'data-pjax-action': anchornode.getAttribute('data-pjax-action'),
+                        'data-pjax-container': anchornode.getAttribute('data-pjax-container'),
+                        'data-pjax-preload': anchornode.getAttribute('data-pjax-preload')
+                    };
+                    i = 0;
+        /*jshint boss:true */
+                    while (parheader=anchornode.getAttribute('data-pjax-par'+(++i))) {
+                        attributes['data-pjax-par'+i] = parheader;
+                    }
+        /*jshint boss:false */
+                    doPjax(anchornode.get('id'), attributes, uri, getCachabletime(anchornode.getAttribute('data-pjax-preload'), true), uri===initialuri, true, true, false);
                 }
             );
         };
@@ -598,15 +638,14 @@ YUI.add('itsa-mojitonthefly', function(Y) {
          * @return {number|undefined} cachable time in seconds, or falsy (meaning: not cachable)
          *
         **/
-        getCachabletime = function(node, preload) {
-            var preloadtime = node.getAttribute('data-pjax-preload'),
-                cachabletime;
+        getCachabletime = function(preloadtime, preload) {
+            var cachabletime;
             if (preload) {
                 cachabletime = (preloadtime==='true') ? DEFAULT_UNSPECIFIED_CACHETIME : preloadtime;
             }
             else {
 /*jshint expr:true */
-                cachabletime = node.getAttribute('data-pjax-cache') || defaultCacheTime || preloadtime;
+                cachabletime = preloadtime || defaultCacheTime || preloadtime;
                 (cachabletime==='true') && (cachabletime=DEFAULT_UNSPECIFIED_CACHETIME);
 /*jshint expr:false */
             }
@@ -627,15 +666,19 @@ YUI.add('itsa-mojitonthefly', function(Y) {
                     popstate = (e.src==='popstate'),
                     uri = newVal.uri,
                     targetid = newVal.targetid,
-                    targetnode = popstate && targetid && Y.one('#'+targetid);
-                if (targetnode && uri) {
-                    Y.fire(EVT_PJAX, {uri: uri, targetnode: targetnode, fromhistorychange: true, xpos: newVal.xpos, ypos: newVal.ypos});
+                    attributes = newVal.attributes;
+/*jshint expr:true */
+                (uri==='') && (uri='/');
+/*jshint expr:false */
+                if (popstate && uri) {
+                    Y.fire(EVT_PJAX, {uri: uri, targetid: targetid, attributes: attributes, fromhistorychange: true, xpos: newVal.xpos, ypos: newVal.ypos});
                 }
             });
             body.delegate(
                 ['tap', 'click'],
                 function(e) {
-                    var targetnode = e.currentTarget;
+                    var target = e.currentTarget,
+                        attributes, parheader, i;
                     if (e.type==='click') {
                         e.preventDefault();
                     }
@@ -651,7 +694,19 @@ YUI.add('itsa-mojitonthefly', function(Y) {
                          * @param e.fromhistorychange {boolean} The ButtonNode that was clicked
                          *
                         */
-                        Y.fire(EVT_PJAX, {uri: targetnode.getAttribute('href'), targetnode: targetnode, fromhistorychange: false});
+                        attributes = {
+                            'data-pjax-mojit': target.getAttribute('data-pjax-mojit'),
+                            'data-pjax-action': target.getAttribute('data-pjax-action'),
+                            'data-pjax-container': target.getAttribute('data-pjax-container'),
+                            'data-pjax-preload': target.getAttribute('data-pjax-preload')
+                        };
+                        i = 0;
+            /*jshint boss:true */
+                        while (parheader=target.getAttribute('data-pjax-par'+(++i))) {
+                            attributes['data-pjax-par'+i] = parheader;
+                        }
+            /*jshint boss:false */
+                        Y.fire(EVT_PJAX, {uri: target.getAttribute('href'), targetid: target.get('id'), attributes: attributes, fromhistorychange: false});
                     }
                 },
                 'a[data-pjax-mojit]'
@@ -676,20 +731,26 @@ YUI.add('itsa-mojitonthefly', function(Y) {
         **/
         defFnLoadPage = function(e) {
             var uri = e.uri,
-                targetnode = e.targetnode,
+                targetid = e.targetid,
+                attributes = e.attributes,
                 fromhistorychange = e.fromhistorychange,
-                mojit, cachabletime, loadedpagesuri, expiretime, puremenu, linode;
-            if (fromhistorychange) {
-                targetnode.focus();
-                win.scrollTo(e.xpos, e.ypos);
-            }
-            linode = targetnode.get('parentNode');
-            puremenu = linode.get('parentNode').get('parentNode');
+                mojit, cachabletime, loadedpagesuri, expiretime, puremenu, linode, targetnode, updatewindow;
+            updatewindow = function() {
+                targetnode = Y.one('#'+targetid);
+                if (fromhistorychange) {
 /*jshint expr:true */
-            puremenu.hasClass('pure-menu') && setSelectedMenu(puremenu, linode);
+                    targetnode && targetnode.focus();
 /*jshint expr:false */
+                    win.scrollTo(e.xpos, e.ypos);
+                }
+                linode = targetnode && targetnode.get('parentNode');
+                puremenu = linode && linode.get('parentNode').get('parentNode');
+/*jshint expr:true */
+                puremenu && puremenu.hasClass('pure-menu') && setSelectedMenu(puremenu, linode);
+/*jshint expr:false */
+            };
             loadedpagesuri = loadedpages[uri];
-            cachabletime = getCachabletime(targetnode);
+            cachabletime = getCachabletime(attributes['data-pjax-preload']);
             // first check if we can retreive from cache:
             if (loadedpagesuri) {
                 loadedpagesuri.then(
@@ -706,7 +767,7 @@ YUI.add('itsa-mojitonthefly', function(Y) {
                             // now reset the expiretime
 /*jshint expr:true */
                             loadedpages[uri].expire && loadedpages[uri].expire.setTime(expiretime);
-                            fromhistorychange || saveHistory(uri, loadedpagesuriData.title, targetnode);
+                            fromhistorychange || saveHistory(uri, loadedpagesuriData.title, targetid, attributes);
 /*jshint expr:false */
                         }
                         else if (Y.one('#'+loadedpagesuriData.viewId)) {
@@ -721,20 +782,26 @@ YUI.add('itsa-mojitonthefly', function(Y) {
                                 DATE_ADD_SECONDS(loadedpagesuriData.expire, cachabletime);
                             }
 /*jshint expr:true */
-                            fromhistorychange || saveHistory(uri, loadedpagesuriData.title, targetnode);
+                            fromhistorychange || saveHistory(uri, loadedpagesuriData.title, targetid, attributes);
 /*jshint expr:false */
                         }
                         else {
-                            doPjax(targetnode, uri, cachabletime, loadedpagesuriData.preload ? false : true, false, fromhistorychange, loadedpagesuriData.preload);
+                            doPjax(targetid, attributes, uri, cachabletime, loadedpagesuriData.preload ? false : true, false, fromhistorychange, loadedpagesuriData.preload);
                         }
                     },
                     function() {
-                        doPjax(targetnode, uri, cachabletime, false, false, fromhistorychange);
+                        doPjax(targetid, attributes, uri, cachabletime, false, false, fromhistorychange);
                     }
+                ).then(
+                    updatewindow,
+                    updatewindow
                 );
             }
             else {
-                doPjax(targetnode, uri, cachabletime, false, false, fromhistorychange);
+                doPjax(targetid, attributes, uri, cachabletime, false, false, fromhistorychange).then(
+                    updatewindow,
+                    updatewindow
+                );
             }
         };
 
@@ -742,7 +809,7 @@ YUI.add('itsa-mojitonthefly', function(Y) {
          * Performs the serverinvocation. Will load the Mojit-data as json, and either insert it into the Dom or cache ther result for later.
          *
          * @method doPjax
-         * @param targetnode {Y.Node} anchor-node that holds information about the mojit and its action
+         * @param targetid {String} anchor-node-id that holds information about the mojit and its action
          * @param uri {String} uri that should have been loaded when not loading through Pjax (href-value)
          * @param cachabletime {number} seconds that the view should be cached
          * @param renderedbefore {boolean} whether the view was rendered before
@@ -750,19 +817,19 @@ YUI.add('itsa-mojitonthefly', function(Y) {
          * @param nosavehistory {boolean} if the invokcation should be done without saving the history-state (only when called through the browsers back-forward buttons)
          * @param ispreloaded {boolean} if the Mojits value is preloaded
          * @protected
+         * @return {Promise} serverresponse
          *
         **/
-        doPjax = function(targetnode, uri, cachabletime, renderedbefore, preload, nosavehistory, ispreloaded) {
-            var pjaxcontainer = targetnode.getAttribute('data-pjax-container'),
+        doPjax = function(targetid, attributes, uri, cachabletime, renderedbefore, preload, nosavehistory, ispreloaded) {
+            var pjaxcontainer = attributes['data-pjax-container'],
                 container = (pjaxcontainer && Y.one(pjaxcontainer)) || defaultContainer || body,
                 i = 0,
                 loadmojit, loadaction, headers, jsonPromise, parheader;
-
-            loadmojit = targetnode.getAttribute('data-pjax-mojit');
-            loadaction = targetnode.getAttribute('data-pjax-action');
+            loadmojit = attributes['data-pjax-mojit'];
+            loadaction = attributes['data-pjax-action'];
             headers = {'M-PJAX': true};
 /*jshint boss:true */
-            while (parheader=targetnode.getAttribute('data-pjax-par'+(++i))) {
+            while (parheader=attributes['data-pjax-par'+(++i)]) {
                 headers['M-PJAX-PAR'+i] = parheader;
             }
 /*jshint boss:false */
@@ -773,14 +840,24 @@ YUI.add('itsa-mojitonthefly', function(Y) {
             preload || pjaxnotifier.fire('cancel', {container: container});
             jsonPromise = Y.io.getJSON(uri, {headers: headers});
             // first save history with current title
-            nosavehistory || saveHistory(uri, doc.title, targetnode);
+            nosavehistory || saveHistory(uri, doc.title, targetid, attributes);
 /*jshint expr:false */
-            jsonPromise.then(
+            jsonPromise.preload = preload;
+            jsonPromise.container = container;
+            // add the promise to the eventnotifier, to be able to reject when needed:
+            pjaxnotifier.addEvents(jsonPromise);
+            jsonPromise.on('cancel', function (e) {
+                var promise = jsonPromise;
+/*jshint expr:true */
+                promise.preload || (promise.container!==e.container) || promise.abort();
+/*jshint expr:false */
+            });
+            return jsonPromise.then(
                 function(response) {
                     var expire, returnObject, assets, topCSS, bottomCSS, bodychildren, lastBodyNode;
                     // now replace history with the known title
 /*jshint expr:true */
-                    nosavehistory || saveHistory(uri, response.title, targetnode, true);
+                    nosavehistory || saveHistory(uri, response.title, targetid, attributes, true);
 /*jshint expr:false */
                     if (preload) {
                         assets = response.assets;
@@ -811,16 +888,6 @@ YUI.add('itsa-mojitonthefly', function(Y) {
                     }
                 }
             );
-            jsonPromise.preload = preload;
-            jsonPromise.container = container;
-            // add the promise to the eventnotifier, to be able to reject when needed:
-            pjaxnotifier.addEvents(jsonPromise);
-            jsonPromise.on('cancel', function (e) {
-                var promise = jsonPromise;
-/*jshint expr:true */
-                promise.preload || (promise.container!==e.container) || promise.abort();
-/*jshint expr:false */
-            });
         };
 
         // now run the initialiser:
@@ -888,10 +955,23 @@ YUI.add('itsa-mojitonthefly', function(Y) {
              *
             **/
             simulateAnchorClick: function(anchornode) {
-                var valid =  (anchornode.get('tagName')==='A') && anchornode.getAttribute('data-pjax-mojit');
-/*jshint expr:true */
-                valid && Y.fire(EVT_PJAX, {uri: anchornode.getAttribute('href'), targetnode: anchornode, fromhistorychange: false});
-/*jshint expr:false */
+                var valid =  (anchornode.get('tagName')==='A') && anchornode.getAttribute('data-pjax-mojit'),
+                    attributes, i, parheader;
+                if (valid) {
+                    attributes = {
+                        'data-pjax-mojit': anchornode.getAttribute('data-pjax-mojit'),
+                        'data-pjax-action': anchornode.getAttribute('data-pjax-action'),
+                        'data-pjax-container': anchornode.getAttribute('data-pjax-container'),
+                        'data-pjax-preload': anchornode.getAttribute('data-pjax-preload')
+                    };
+                    i = 0;
+        /*jshint boss:true */
+                    while (parheader=anchornode.getAttribute('data-pjax-par'+(++i))) {
+                        attributes['data-pjax-par'+i] = parheader;
+                    }
+        /*jshint boss:false */
+                    Y.fire(EVT_PJAX, {uri: anchornode.getAttribute('href'), targetid: anchornode.get('id'), attributes: attributes, fromhistorychange: false});
+                }
             }
         };
     })();

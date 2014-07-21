@@ -1,7 +1,7 @@
 {
   "name": "itsa-mojitonthefly-addon",
   "description": "Utility mojit for mojito providing Y.Node.loadMojit and Pjax functionality by executing mojit instances inside containernodes 'on the fly', without a predefinition in application.json.",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": {
     "name": "Marco Asbreuk",
     "email": "marco@itsasbreuk.nl"

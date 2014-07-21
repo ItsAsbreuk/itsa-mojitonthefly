@@ -24,8 +24,8 @@ _note: the `--save` flag indicates that the `package.json` for
 the application should also register the `itsa-mojitonthefly-addon` as
 a dependency._
 
-Usage step 1:
--------------
+Step 1:
+-------
 
 Once `itsa-mojitonthefly-addon` is installed in your application, you
 must add its functionality inside `app.js`, by defining the statement:
@@ -62,8 +62,8 @@ This will add extra middleware that interrupts when the headers
 `M-PJAX` or `M-FLY-MOJIT` are found. These headers are generated
 on the client by _Y.Node.loadMojit()_ and _Y.mojito.pjax_ (see below).
 
-Usage step 2:
--------------
+Step 2:
+-------
 
 With the Mojit you want to use _Y.Node.loadMojit()_ or _Pjax-functionality_:
 Inside `controller.server.js` --> include the dependency `itsa-mojitonthefly-addon`.
@@ -82,8 +82,8 @@ YUI.add('navigation', function(Y, NAME) {
 ```
 This ensures the modulecode will be send to the client.
 
-Usage step 3a Y.Node.loadMojit():
----------------------------------
+Step 3a Y.Node.loadMojit():
+---------------------------
 
 You can call `Y.Node.loadMojit(mojitname, action)` to make the mojit
 execute and loaded inside the parentnode specified.
@@ -115,8 +115,8 @@ YUI.add('home-binder-index', function(Y, NAME) {
 }, '0.0.1', {requires: ['mojito-client', 'event', 'itsa-mojitonthefly']});
 ```
 
-Usage step 3b Pjax:
--------------------
+Step 3b Pjax:
+-------------
 
 Assuming _Step 2_ is set, you can use Pjax roght out of the box by just defining
 the right attributes to the HTML:
@@ -192,8 +192,8 @@ Pjax will file the `pjax-event` on the Y-instance. The eventobject has the prope
     * targetnode (anchornode)
     * fromhistory (whether the pjac is initiated by history's back/foreward button)
 
-Usage step 4:
--------------
+Step 4:
+-------
 
 Because Mojits are defined dynamicly, the also are removed dynamicly.
 You MUST make sure to handle Mojit-destruction well!
